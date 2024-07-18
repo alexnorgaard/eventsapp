@@ -3,6 +3,12 @@ module eventsapp.alexnorgaard.dk
 go 1.22.5
 
 require (
+	github.com/Boostport/address v0.11.2 // indirect
+	github.com/codingsince1985/geo-golang v1.8.4 // indirect
+	github.com/garrettsickles/geolocation v0.0.0-20170827183922-763341d9a50c // indirect
+	github.com/google/uuid v1.6.0 // indirect
+	github.com/hashicorp/errwrap v1.1.0 // indirect
+	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/labstack/echo/v4 v4.12.0 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
@@ -12,5 +18,5 @@ require (
 	golang.org/x/crypto v0.22.0 // indirect
 	golang.org/x/net v0.24.0 // indirect
 	golang.org/x/sys v0.19.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/text v0.16.0 // indirect
 )

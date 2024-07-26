@@ -1,6 +1,6 @@
 package models
 
 type User struct {
-	BaseModel
+	Model
 	Name string `json:"name" gorm:"unique"`
 }

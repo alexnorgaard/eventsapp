@@ -3,11 +3,17 @@ package main
 import (
 	"net/http"
 
-	"github.com/alexnorgaard/eventsapp/cmd/models"
+	model "github.com/alexnorgaard/eventsapp/cmd/model"
+	dbmodule "github.com/alexnorgaard/eventsapp/db"
 	"github.com/labstack/echo/v4"
 )
 
 func main() {
+	db, err := dbmodule.Connect()
+	if err != nil {
+		panic(err)
+	}
+	dbmodule.Migrate(db)
 	e := echo.New()
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
@@ -26,7 +32,7 @@ func main() {
 		return c.String(http.StatusOK, id)
 	})
 	e.POST("/events", func(c echo.Context) error {
-		var event models.Event
+		var event model.Event
 		err := c.Bind(&event)
 		if err != nil {
 			return c.String(http.StatusBadRequest, "Bad Request")

@@ -20,11 +20,6 @@ type config struct {
 	}
 }
 
-// Create a new config instance.
-var (
-	conf *config
-)
-
 // Read the config file from the current directory and marshal
 // into the conf config struct.
 func GetConf() *config {

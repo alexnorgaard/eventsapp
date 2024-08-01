@@ -7,45 +7,44 @@ import (
 	"github.com/alexnorgaard/eventsapp/cmd/handler"
 	"github.com/alexnorgaard/eventsapp/cmd/model"
 	echo "github.com/labstack/echo/v4"
-	"gorm.io/gorm"
 )
 
-func RegisterRoutes(e *echo.Echo, db *gorm.DB) {
+func RegisterRoutes(e *echo.Echo, h *handler.Handler) {
 	fmt.Println("Registering routes")
 	v1 := e.Group("/v1")
 
-	events := v1.Group("/events")
-	events.GET("/", func(c echo.Context) error {
+	event := v1.Group("/event")
+	event.GET("/", func(c echo.Context) error {
 		return nil
 	})
-	events.POST("/", func(c echo.Context) error {
-		return handler.CreateEvent(c, db)
+	event.POST("/", func(c echo.Context) error {
+		return h.EventStore.CreateEvent(c)
 	})
-	events.GET("/", func(c echo.Context) error {
+	event.GET("/", func(c echo.Context) error {
 		// event := NewEvent()
 		// return c.JSON(http.StatusOK, event)
 		return nil
 	})
-	events.GET("/:id", func(c echo.Context) error {
-		id := c.Param("id")
-		return c.String(http.StatusOK, id)
+	event.GET("/:id", func(c echo.Context) error {
+		fmt.Println("Getting event by ID")
+		return h.EventStore.GetByID(c)
 	})
-	events.PUT("/:id", func(c echo.Context) error {
-		id := c.Param("id")
-		return c.String(http.StatusOK, id)
-	})
-
-	events.DELETE("/:id", func(c echo.Context) error {
+	event.PUT("/:id", func(c echo.Context) error {
 		id := c.Param("id")
 		return c.String(http.StatusOK, id)
 	})
 
-	users := v1.Group("/users")
-	users.GET("/:id", func(c echo.Context) error {
+	event.DELETE("/:id", func(c echo.Context) error {
 		id := c.Param("id")
 		return c.String(http.StatusOK, id)
 	})
-	users.POST("/", func(c echo.Context) error {
+
+	user := v1.Group("/user")
+	user.GET("/:id", func(c echo.Context) error {
+		id := c.Param("id")
+		return c.String(http.StatusOK, id)
+	})
+	user.POST("/", func(c echo.Context) error {
 		var user model.User
 		err := c.Bind(&user)
 		if err != nil {

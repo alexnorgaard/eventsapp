@@ -5,11 +5,11 @@ import (
 )
 
 type Handler struct {
-	eventStore event.Store
+	EventStore event.Store
 }
 
 func NewHandler(eventStore event.Store) *Handler {
 	return &Handler{
-		eventStore: eventStore,
+		EventStore: eventStore,
 	}
 }

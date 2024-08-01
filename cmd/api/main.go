@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/alexnorgaard/eventsapp/cmd/handler"
 	router "github.com/alexnorgaard/eventsapp/cmd/router"
 	dbmodule "github.com/alexnorgaard/eventsapp/db"
 	"github.com/labstack/echo/v4"
@@ -13,7 +14,10 @@ func main() {
 	}
 	dbmodule.Migrate(db)
 	e := echo.New()
-	router.RegisterRoutes(e, db)
+	e.Validator = handler.NewValidator()
+	es := handler.NewEventStore(db)
+	h := handler.NewHandler(es)
+	router.RegisterRoutes(e, h)
 	// e.GET("/", func(c echo.Context) error {
 	// 	return c.String(http.StatusOK, "Hello, World!")
 	// })

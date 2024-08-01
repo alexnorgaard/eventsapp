@@ -8,12 +8,12 @@ import (
 
 type Event struct {
 	Model
-	Title         string        `json:"title" gorm:"not null"`
+	Title         string        `json:"title" gorm:"not null" validate:"required"`
 	Description   string        `json:"description" gorm:"default:NULL"`
 	Owners        []User        `json:"owner" gorm:"many2many:event_owners"`
 	Private_event bool          `json:"private_event" gorm:"default:false"`
-	Time_start    time.Time     `json:"time_start"`
-	Time_end      time.Time     `json:"time_end" gorm:"default:NULL;check:time_end > time_start"`
+	Time_start    time.Time     `json:"time_start" validate:"required,gt"`
+	Time_end      time.Time     `json:"time_end" gorm:"default:NULL;check:time_end > time_start" validate:"omitempty,gtefield=Time_start"`
 	Address       *geo.Address  `json:"address" gorm:"embedded"`
 	Geolocation   *geo.Location `json:"geolocation" gorm:"embedded"`
 	//TODO: Want this to be a separate table, but reverse declaration of FK with gorm makes it not possible

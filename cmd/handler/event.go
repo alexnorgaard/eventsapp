@@ -15,6 +15,12 @@ type EventStore struct {
 	db *gorm.DB
 }
 
+type APIEvent struct {
+	ID    uuid.UUID `json:"id"`
+	Title string    `json:"name"`
+	//TODO: distance  float64   `json:"distance"`
+}
+
 func NewEventStore(db *gorm.DB) *EventStore {
 	return &EventStore{db: db}
 }
@@ -34,8 +40,15 @@ func (es *EventStore) GetByID(c echo.Context) error {
 	return c.JSON(http.StatusOK, event)
 }
 
-func (es *EventStore) GetEvent(c echo.Context) (string, error) {
-	return "hai", nil
+func (es *EventStore) GetEvent(c echo.Context) error {
+	params := c.QueryParams()
+	tags := params.Get("tags")
+	var events = []APIEvent{} //Smart select fields - only returns the fields in APIEvent
+	result := es.db.Model(&model.Event{}).Find(&events, "tags @> ?", "{"+tags+"}")
+	if result.Error != nil {
+		return c.String(http.StatusNotFound, "Not Found")
+	}
+	return c.JSON(http.StatusOK, events)
 }
 func (es *EventStore) CreateEvent(c echo.Context) error {
 	fmt.Printf("Creating event: %v\n", c)
@@ -49,17 +62,16 @@ func (es *EventStore) CreateEvent(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
-    
+
 	if event.Address != nil {
 		location, err := geolocationclient.GetGeolocation(event.Address.FormattedAddress)
 		if err != nil {
-		return c.String(http.StatusInternalServerError, "Internal Server Error")
+			return c.String(http.StatusInternalServerError, "Internal Server Error")
 		}
 		fmt.Printf("Location is: %v\n", location)
 		event.Geolocation = location
 	}
-	
-	result := es.db.Create(&event)
+
 	if es.db.Create(&event).Error != nil {
 		return c.String(http.StatusInternalServerError, "Internal Server Error")
 	}

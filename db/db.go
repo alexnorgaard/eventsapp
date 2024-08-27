@@ -7,12 +7,13 @@ import (
 	"github.com/alexnorgaard/eventsapp/cmd/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func Connect() (*gorm.DB, error) {
 	conf := config.GetConf()
 	dsn := fmt.Sprintf("host=%v user=%v password=%v dbname=%v port=%v sslmode=disable TimeZone=Europe/Copenhagen", conf.Postgres.Host, conf.Postgres.User, conf.Postgres.Password, conf.Postgres.Database, conf.Postgres.Port)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
 	return db, err
 }
 

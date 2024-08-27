@@ -14,16 +14,11 @@ func RegisterRoutes(e *echo.Echo, h *handler.Handler) {
 	v1 := e.Group("/v1")
 
 	event := v1.Group("/event")
-	event.GET("/", func(c echo.Context) error {
-		return nil
-	})
 	event.POST("/", func(c echo.Context) error {
 		return h.EventStore.CreateEvent(c)
 	})
 	event.GET("/", func(c echo.Context) error {
-		// event := NewEvent()
-		// return c.JSON(http.StatusOK, event)
-		return nil
+		return h.EventStore.GetEvent(c)
 	})
 	event.GET("/:id", func(c echo.Context) error {
 		fmt.Println("Getting event by ID")

@@ -16,7 +16,7 @@ type Event struct {
 	Time_end      time.Time     `json:"time_end" gorm:"default:NULL;check:time_end > time_start" validate:"omitempty,gtefield=Time_start"`
 	Address       *geo.Address  `json:"address" gorm:"embedded"`
 	Geolocation   *geo.Location `json:"geolocation" gorm:"embedded"`
-	Tags          pq.StringArray `json:"tags" gorm:"type:text[];index:tags_idx,type:GIN"`
+	Tags          pq.StringArray `json:"tags" query:"tags" gorm:"type:text[];index:tags_idx,type:GIN"`
 	//TODO: Want this to be a separate table, but reverse declaration of FK with gorm makes it not possible
 	Subscribers []User `json:"subscribers" gorm:"many2many:event_subscribers"`
 }

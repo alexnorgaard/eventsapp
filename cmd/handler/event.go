@@ -49,14 +49,17 @@ func (es *EventStore) CreateEvent(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
-
-	location, err := geolocationclient.GetGeolocation(event.Address.FormattedAddress)
-	if err != nil {
+    
+	if event.Address != nil {
+		location, err := geolocationclient.GetGeolocation(event.Address.FormattedAddress)
+		if err != nil {
 		return c.String(http.StatusInternalServerError, "Internal Server Error")
+		}
+		fmt.Printf("Location is: %v\n", location)
+		event.Geolocation = location
 	}
-	fmt.Printf("Location is: %v\n", location)
-	event.Geolocation = location
-
+	
+	result := es.db.Create(&event)
 	if es.db.Create(&event).Error != nil {
 		return c.String(http.StatusInternalServerError, "Internal Server Error")
 	}

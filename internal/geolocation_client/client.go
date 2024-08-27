@@ -2,6 +2,7 @@ package geolocationclient
 
 import (
 	"errors"
+	"fmt"
 
 	config "github.com/alexnorgaard/eventsapp"
 	"github.com/codingsince1985/geo-golang"
@@ -9,6 +10,7 @@ import (
 )
 
 func GetGeolocation(address string) (*geo.Location, error) {
+	fmt.Printf("Getting geolocation for address: %v\n", address)
 	api_key := config.GetConf().Google_geocoding_api.Api_key
 	geocoder := google.Geocoder(api_key)
 	location, err := geocoder.Geocode(address)
@@ -18,6 +20,7 @@ func GetGeolocation(address string) (*geo.Location, error) {
 	if location == nil {
 		return nil, errors.New("No location found")
 	}
+	fmt.Printf("Location is: %v\n", location)
 	return location, nil
 }
 

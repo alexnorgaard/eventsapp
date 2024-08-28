@@ -16,8 +16,9 @@ type EventStore struct {
 }
 
 type APIEvent struct {
-	ID    uuid.UUID `json:"id"`
-	Title string    `json:"name"`
+	ID       uuid.UUID `json:"id"`
+	Title    string    `json:"name"`
+	Distance float64   `json:"distance"`
 	//TODO: distance  float64   `json:"distance"`
 }
 
@@ -43,8 +44,14 @@ func (es *EventStore) GetByID(c echo.Context) error {
 func (es *EventStore) GetEvent(c echo.Context) error {
 	params := c.QueryParams()
 	tags := params.Get("tags")
-	var events = []APIEvent{} //Smart select fields - only returns the fields in APIEvent
-	result := es.db.Model(&model.Event{}).Find(&events, "tags @> ?", "{"+tags+"}")
+	lat := params.Get("lat")
+	long := params.Get("long")
+	coordinates := []string{long, lat}
+	var events = []APIEvent{} //Smart select fields - only returns the fields in APIEvent when used in Find
+	result := es.db.Model(&model.Event{}).Where("tags @> ?", "{"+tags+"}").Select("id, title, lng, lat, ST_DistanceSphere(ST_MakePoint(lng,lat),ST_MakePoint(?)) as distance", coordinates).Order("distance asc").Find(&events)
+	// result := es.db.Model(&model.Event{}).Find(&events, "tags @> ?", "{"+tags+"}")
+	//TODO: Get distance from geolocation - using coordinate(long, lat)
+	// result := es.db.Raw({"SELECT events.id,events.title FROM "events" WHERE tags @> ?, '{'+party+'}'})
 	if result.Error != nil {
 		return c.String(http.StatusNotFound, "Not Found")
 	}
@@ -66,6 +73,7 @@ func (es *EventStore) CreateEvent(c echo.Context) error {
 	if event.Address != nil {
 		location, err := geolocationclient.GetGeolocation(event.Address.FormattedAddress)
 		if err != nil {
+			fmt.Println(err)
 			return c.String(http.StatusInternalServerError, "Internal Server Error")
 		}
 		fmt.Printf("Location is: %v\n", location)

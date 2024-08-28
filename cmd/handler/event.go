@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/alexnorgaard/eventsapp/cmd/model"
 	geolocationclient "github.com/alexnorgaard/eventsapp/internal/geolocation_client"
@@ -17,7 +18,7 @@ type EventStore struct {
 
 type APIEvent struct {
 	ID       uuid.UUID `json:"id"`
-	Title    string    `json:"name"`
+	Title    string    `json:"title"`
 	Distance float64   `json:"distance"`
 	//TODO: distance  float64   `json:"distance"`
 }
@@ -43,14 +44,16 @@ func (es *EventStore) GetByID(c echo.Context) error {
 
 func (es *EventStore) GetEvent(c echo.Context) error {
 	params := c.QueryParams()
-	tags := params.Get("tags")
+	tags := params.Get("tags") //Should probably not be called tags anymore, as its now also a string search
+	title := strings.ReplaceAll(tags, ",", " ")
 	lat := params.Get("lat")
 	long := params.Get("long")
 	coordinates := []string{long, lat}
-	var events = []APIEvent{} //Smart select fields - only returns the fields in APIEvent when used in Find
-	result := es.db.Model(&model.Event{}).Where("tags @> ?", "{"+tags+"}").Select("id, title, lng, lat, ST_DistanceSphere(ST_MakePoint(lng,lat),ST_MakePoint(?)) as distance", coordinates).Order("distance asc").Find(&events)
+	//Smart select fields - only returns the fields in APIEvent when used in Find
+	var events = []APIEvent{}
+	//ILIKE makes the LIKE case insensitive
+	result := es.db.Model(&model.Event{}).Where("tags @> ? OR title ILIKE ?", "{"+tags+"}", "%"+title+"%").Select("id, title, lng, lat, ST_DistanceSphere(ST_MakePoint(lng,lat),ST_MakePoint(?))/1000 as distance", coordinates).Order("distance asc").Find(&events)
 	// result := es.db.Model(&model.Event{}).Find(&events, "tags @> ?", "{"+tags+"}")
-	//TODO: Get distance from geolocation - using coordinate(long, lat)
 	// result := es.db.Raw({"SELECT events.id,events.title FROM "events" WHERE tags @> ?, '{'+party+'}'})
 	if result.Error != nil {
 		return c.String(http.StatusNotFound, "Not Found")

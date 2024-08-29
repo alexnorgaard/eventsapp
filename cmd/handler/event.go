@@ -60,6 +60,7 @@ func (es *EventStore) GetEvent(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, events)
 }
+
 func (es *EventStore) CreateEvent(c echo.Context) error {
 	fmt.Printf("Creating event: %v\n", c)
 	event := model.Event{}

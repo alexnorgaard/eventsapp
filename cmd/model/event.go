@@ -9,7 +9,7 @@ import (
 
 type Event struct {
 	Model
-	Title         string         `json:"title" gorm:"not null" validate:"required"`
+	Title         string         `json:"title" gorm:"not null;index:title_idx,type:GIN" validate:"required"`
 	Description   string         `json:"description" gorm:"default:NULL"`
 	Owners        []User         `json:"owner" gorm:"many2many:event_owners"`
 	Private_event bool           `json:"private_event" gorm:"default:false"`

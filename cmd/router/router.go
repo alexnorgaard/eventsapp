@@ -25,8 +25,7 @@ func RegisterRoutes(e *echo.Echo, h *handler.Handler) {
 		return h.EventStore.GetByID(c)
 	})
 	event.PUT("/:id", func(c echo.Context) error {
-		id := c.Param("id")
-		return c.String(http.StatusOK, id)
+		return h.EventStore.UpdateEvent(c)
 	})
 
 	event.DELETE("/:id", func(c echo.Context) error {

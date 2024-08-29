@@ -89,3 +89,31 @@ func (es *EventStore) CreateEvent(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, event)
 }
+
+func (es *EventStore) UpdateEvent(c echo.Context) error {
+	uuid, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		fmt.Println(err)
+		return c.String(http.StatusBadRequest, "Bad Request - Invalid UUID")
+	}
+	//TODO: Check for existence of event
+	//TODO: Check if user is owner of event
+	event := model.Event{Model: model.Model{ID: uuid}}
+	fmt.Printf("Event is: %v\n", event)
+	err = c.Bind(&event)
+	fmt.Printf("Event is: %v\n", event)
+	if err != nil {
+		fmt.Println(err)
+		return c.String(http.StatusBadRequest, "Bad Request")
+	}
+	//should probably be ignored on update
+	err = c.Validate(&event)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+	result := es.db.Model(&event).Updates(&event)
+	if result.Error != nil {
+		return c.String(http.StatusInternalServerError, "Internal Server Error")
+	}
+	return c.JSON(http.StatusOK, event)
+}

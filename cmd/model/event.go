@@ -20,6 +20,7 @@ type Event struct {
 	Tags          pq.StringArray `json:"tags" query:"tags" gorm:"type:text[];index:tags_idx,type:GIN"`
 	//TODO: Want this to be a separate table, but reverse declaration of FK with gorm makes it not possible
 	Subscribers []User `json:"subscribers" gorm:"many2many:event_subscribers"`
+	Is_enabled  bool   `json:"is_enabled" gorm:"default:true"`
 }
 
 // type Subscription struct {

@@ -108,10 +108,10 @@ func (es *EventStore) UpdateEvent(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Bad Request")
 	}
 	//should probably be ignored on update
-	err = c.Validate(&event)
-	if err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
-	}
+	// err = c.Validate(&event)
+	// if err != nil {
+	// 	return c.String(http.StatusBadRequest, err.Error())
+	// }
 	result := es.db.Model(&event).Updates(&event)
 	if result.Error != nil {
 		return c.String(http.StatusInternalServerError, "Internal Server Error")

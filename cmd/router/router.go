@@ -11,6 +11,12 @@ import (
 
 func RegisterRoutes(e *echo.Echo, h *handler.Handler) {
 	fmt.Println("Registering routes")
+	e.GET("/", func(c echo.Context) error {
+		return c.HTML(http.StatusOK, `
+			<h1>Welcome to Echo!</h1>
+			<h3>TLS certificates automatically installed from Let's Encrypt :)</h3>
+		`)
+	})
 	v1 := e.Group("/v1")
 
 	event := v1.Group("/event")

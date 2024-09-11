@@ -6,7 +6,7 @@ import (
 
 type Store interface {
 	GetByID(echo.Context) error
-	GetEvent(echo.Context) error //TODO: Figure out how to use query parameters for this
-	CreateEvent(echo.Context) error
-	UpdateEvent(echo.Context) error
+	Get(echo.Context) error
+	Create(echo.Context) error
+	Update(echo.Context) error
 }

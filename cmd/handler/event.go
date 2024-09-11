@@ -42,7 +42,7 @@ func (es *EventStore) GetByID(c echo.Context) error {
 	return c.JSON(http.StatusOK, event)
 }
 
-func (es *EventStore) GetEvent(c echo.Context) error {
+func (es *EventStore) Get(c echo.Context) error {
 	params := c.QueryParams()
 	tags := params.Get("tags") //Should probably not be called tags anymore, as its now also a string search
 	title := strings.ReplaceAll(tags, ",", " ")
@@ -61,7 +61,7 @@ func (es *EventStore) GetEvent(c echo.Context) error {
 	return c.JSON(http.StatusOK, events)
 }
 
-func (es *EventStore) CreateEvent(c echo.Context) error {
+func (es *EventStore) Create(c echo.Context) error {
 	fmt.Printf("Creating event: %v\n", c)
 	event := model.Event{}
 	err := c.Bind(&event)
@@ -91,7 +91,7 @@ func (es *EventStore) CreateEvent(c echo.Context) error {
 	return c.JSON(http.StatusOK, event)
 }
 
-func (es *EventStore) UpdateEvent(c echo.Context) error {
+func (es *EventStore) Update(c echo.Context) error {
 	uuid, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		fmt.Println(err)

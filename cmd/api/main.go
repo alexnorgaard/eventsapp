@@ -24,18 +24,13 @@ func main() {
 	es := handler.NewEventStore(db)
 	h := handler.NewHandler(es)
 	router.RegisterRoutes(e, h)
-
-	// e.AutoTLSManager.Cache = autocert.DirCache("/var/www/.cache")
-	// e.Logger.Fatal(e.StartAutoTLS(":443"))
-	fmt.Println("creating cert manager")
 	autoTLSManager := autocert.Manager{
 		Prompt: autocert.AcceptTOS,
 		// Cache certificates to avoid issues with rate limits (https://letsencrypt.org/docs/rate-limits)
-		Cache:      autocert.DirCache("/var/www/.cache"),
-		HostPolicy: autocert.HostWhitelist("app.alexnorgaard.dk"),
+		Cache: autocert.DirCache("/var/www/.cache"),
+		// HostPolicy: autocert.HostWhitelist("app.alexnorgaard.dk"),
 	}
-	fmt.Println("cert manager created")
-	fmt.Println("starting server")
+
 	s := http.Server{
 		Addr:    ":https",
 		Handler: e, // set Echo as handler

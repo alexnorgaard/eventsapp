@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/tls"
+	"fmt"
 	"net/http"
 
 	"github.com/alexnorgaard/eventsapp/cmd/handler"
@@ -26,13 +27,15 @@ func main() {
 
 	// e.AutoTLSManager.Cache = autocert.DirCache("/var/www/.cache")
 	// e.Logger.Fatal(e.StartAutoTLS(":443"))
-
+	fmt.Println("creating cert manager")
 	autoTLSManager := autocert.Manager{
 		Prompt: autocert.AcceptTOS,
 		// Cache certificates to avoid issues with rate limits (https://letsencrypt.org/docs/rate-limits)
 		Cache:      autocert.DirCache("/var/www/.cache"),
 		HostPolicy: autocert.HostWhitelist("app.alexnorgaard.dk"),
 	}
+	fmt.Println("cert manager created")
+	fmt.Println("starting server")
 	s := http.Server{
 		Addr:    ":https",
 		Handler: e, // set Echo as handler
@@ -43,6 +46,7 @@ func main() {
 		},
 		//ReadTimeout: 30 * time.Second, // use custom timeouts
 	}
+	fmt.Println("starting listen and serve")
 	if err := s.ListenAndServeTLS("", ""); err != http.ErrServerClosed {
 		e.Logger.Fatal(err)
 	}

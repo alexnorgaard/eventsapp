@@ -64,15 +64,16 @@ func (es *EventStore) Get(c echo.Context) error {
 func (es *EventStore) Create(c echo.Context) error {
 	fmt.Printf("Creating event: %v\n", c)
 	event := model.Event{}
-	err := c.Validate(&event)
-	if err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
-	}
 
-	err = c.Bind(&event)
+	err := c.Bind(&event)
 	if err != nil {
 		fmt.Println(err)
 		return c.String(http.StatusBadRequest, "Bad Request")
+	}
+
+	err = c.Validate(&event)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 
 	if event.Address != nil {
@@ -103,16 +104,16 @@ func (es *EventStore) Update(c echo.Context) error {
 	//TODO: Check for existence of event
 	//TODO: Check if user is owner of event
 	event := model.Event{Model: model.Model{ID: uuid}}
-	err = c.Validate(&event)
-	if err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
-	}
 	fmt.Printf("Event is: %v\n", event)
 	err = c.Bind(&event)
 	fmt.Printf("Event is: %v\n", event)
 	if err != nil {
 		fmt.Println(err)
 		return c.String(http.StatusBadRequest, "Bad Request")
+	}
+	err = c.Validate(&event)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 	//should probably be ignored on update
 	// err = c.Validate(&event)

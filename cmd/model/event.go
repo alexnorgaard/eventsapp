@@ -9,8 +9,8 @@ import (
 
 type Event struct {
 	Model
-	Title         string         `json:"title" gorm:"not null;index:title_idx,type:GIN" validate:"required,ascii"`
-	Description   string         `json:"description" gorm:"default:NULL" validate:"omitempty,ascii"`
+	Title         string         `json:"title" gorm:"not null;index:title_idx,type:GIN" validate:"required"`
+	Description   string         `json:"description" gorm:"default:NULL"`
 	Banner_s3_url string         `gorm:"default:NULL" validate:"omitempty,url"`
 	Owners        []User         `json:"owner" gorm:"many2many:event_owners"`
 	Private_event bool           `json:"private_event" gorm:"default:false"`
@@ -18,7 +18,7 @@ type Event struct {
 	Time_end      time.Time      `json:"time_end" gorm:"default:NULL;check:time_end > time_start" validate:"omitempty,gtefield=Time_start"`
 	Address       *geo.Address   `json:"address" gorm:"embedded" validate:"required"`
 	Geolocation   *geo.Location  `json:"geolocation" gorm:"embedded"`
-	Tags          pq.StringArray `json:"tags" query:"tags" gorm:"type:text[];index:tags_idx,type:GIN" validate:"omitempty,ascii"`
+	Tags          pq.StringArray `json:"tags" query:"tags" gorm:"type:text[];index:tags_idx,type:GIN"`
 	//TODO: Want this to be a separate table, but reverse declaration of FK with gorm makes it not possible
 	Subscribers []User `json:"subscribers" gorm:"many2many:event_subscribers"`
 	Is_enabled  bool   `json:"is_enabled" gorm:"default:true"`

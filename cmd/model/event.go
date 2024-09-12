@@ -13,7 +13,7 @@ type Event struct {
 	Description   string         `json:"description" gorm:"default:NULL" validate:"omitempty,alphanum"`
 	Banner_s3_url string         `gorm:"default:NULL" validate:"omitempty,url"`
 	Owners        []User         `json:"owner" gorm:"many2many:event_owners"`
-	Private_event bool           `json:"private_event" gorm:"default:false" validate:"omitempty,bool"`
+	Private_event bool           `json:"private_event" gorm:"default:false" validate:"omitempty,boolean"`
 	Time_start    time.Time      `json:"time_start" gorm:"required" validate:"required,gt"` //gt - For time.Time ensures the time value is greater than time.Now.UTC()
 	Time_end      time.Time      `json:"time_end" gorm:"default:NULL;check:time_end > time_start" validate:"omitempty,gtefield=Time_start"`
 	Address       *geo.Address   `json:"address" gorm:"embedded" validate:"required"`

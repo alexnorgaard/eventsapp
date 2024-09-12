@@ -64,21 +64,22 @@ func (es *EventStore) Get(c echo.Context) error {
 func (es *EventStore) Create(c echo.Context) error {
 	fmt.Printf("Creating event: %v\n", c)
 	event := model.Event{}
-	err := c.Bind(&event)
+	err := c.Validate(&event)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	err = c.Bind(&event)
 	if err != nil {
 		fmt.Println(err)
 		return c.String(http.StatusBadRequest, "Bad Request")
-	}
-	err = c.Validate(&event)
-	if err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
 	}
 
 	if event.Address != nil {
 		location, err := geolocationclient.GetGeolocation(event.Address.FormattedAddress)
 		if err != nil {
 			fmt.Println(err)
-			return c.String(http.StatusInternalServerError, "Internal Server Error")
+			return c.String(http.StatusInternalServerError, "Location not found")
 		}
 		fmt.Printf("Location is: %v\n", location)
 		event.Geolocation = location
@@ -92,6 +93,8 @@ func (es *EventStore) Create(c echo.Context) error {
 }
 
 func (es *EventStore) Update(c echo.Context) error {
+	ct := c.Request().Header.Get("Content-Type")
+	fmt.Println("Content-Type is: ", ct)
 	uuid, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		fmt.Println(err)
@@ -100,6 +103,10 @@ func (es *EventStore) Update(c echo.Context) error {
 	//TODO: Check for existence of event
 	//TODO: Check if user is owner of event
 	event := model.Event{Model: model.Model{ID: uuid}}
+	err = c.Validate(&event)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
 	fmt.Printf("Event is: %v\n", event)
 	err = c.Bind(&event)
 	fmt.Printf("Event is: %v\n", event)
@@ -112,9 +119,15 @@ func (es *EventStore) Update(c echo.Context) error {
 	// if err != nil {
 	// 	return c.String(http.StatusBadRequest, err.Error())
 	// }
+	// file_header, err := c.FormFile("image")
 	result := es.db.Model(&event).Updates(&event)
 	if result.Error != nil {
 		return c.String(http.StatusInternalServerError, "Internal Server Error")
 	}
 	return c.JSON(http.StatusOK, event)
 }
+
+// func StoreImage(c echo.Context) string, error {
+// 	image, err := c.FormFile("image")
+// 	return c.String(http.StatusOK, "Image stored")
+// }

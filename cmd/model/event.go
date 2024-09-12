@@ -24,7 +24,7 @@ type Event struct {
 	Is_enabled  bool   `json:"is_enabled" gorm:"default:true"`
 
 	//Not stored in DB
-	Image []byte `form:"image" validate:"omitempty,image"`
+	Image []byte `form:"image"`
 }
 
 // type Subscription struct {

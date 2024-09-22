@@ -111,10 +111,6 @@ func (es *EventStore) Update(c echo.Context) error {
 		fmt.Println(err)
 		return c.String(http.StatusBadRequest, "Bad Request")
 	}
-	err = c.Validate(&event)
-	if err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
-	}
 	//should probably be ignored on update
 	// err = c.Validate(&event)
 	// if err != nil {
@@ -126,6 +122,20 @@ func (es *EventStore) Update(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Internal Server Error")
 	}
 	return c.JSON(http.StatusOK, event)
+}
+
+func (es *EventStore) UpdateImage(c echo.Context) error {
+	uuid, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		fmt.Println(err)
+		return c.String(http.StatusBadRequest, "Bad Request - Invalid UUID")
+	}
+	file_header, err := c.FormFile("image")
+	if err != nil {
+		fmt.Println(err)
+		return c.String(http.StatusBadRequest, "Bad Request - No image")
+	}
+
 }
 
 // func StoreImage(c echo.Context) string, error {

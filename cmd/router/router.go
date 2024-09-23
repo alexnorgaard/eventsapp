@@ -31,6 +31,10 @@ func RegisterRoutes(e *echo.Echo, h *handler.Handler) {
 		return h.EventStore.GetByID(c)
 	})
 	event.PUT("/:id", func(c echo.Context) error {
+		fileHeader, _ := c.FormFile("image")
+		if fileHeader != nil {
+			return h.EventStore.UpdateImage(c)
+		}
 		return h.EventStore.Update(c)
 	})
 

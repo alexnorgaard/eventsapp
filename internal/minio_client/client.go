@@ -30,14 +30,14 @@ func GetClient() (*minio.Client, error) {
 	return minioClient, err
 }
 
-func UploadFile(c *minio.Client, fileHeader *multipart.FileHeader) (string, error) {
+func UploadFile(c *minio.Client, fh *multipart.FileHeader) (string, error) {
 	config := config.GetConf()
 	contentType := "application/octet-stream"
-	file, err := fileHeader.Open()
+	file, err := fh.Open()
 	if err != nil {
 		log.Fatalln(err)
 	}
-	uploadInfo, err := c.PutObject(context.Background(), config.S3.Bucket_name_banners, fileHeader.Filename, file, fileHeader.Size, minio.PutObjectOptions{ContentType: contentType})
+	uploadInfo, err := c.PutObject(context.Background(), config.S3.Bucket_name_banners, fh.Filename, file, fh.Size, minio.PutObjectOptions{ContentType: contentType})
 	if err != nil {
 		log.Fatalln(err)
 	}

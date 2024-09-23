@@ -21,7 +21,6 @@ type APIEvent struct {
 	ID       uuid.UUID `json:"id"`
 	Title    string    `json:"title"`
 	Distance float64   `json:"distance"`
-	//TODO: distance  float64   `json:"distance"`
 }
 
 func NewEventStore(db *gorm.DB) *EventStore {
@@ -130,6 +129,10 @@ func (es *EventStore) UpdateImage(c echo.Context) error {
 	if err != nil {
 		fmt.Println(err)
 		return c.String(http.StatusBadRequest, "Bad Request - Invalid UUID")
+	}
+	err = ValidateImage(c)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 	file_header, err := c.FormFile("image")
 	if err != nil {

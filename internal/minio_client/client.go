@@ -2,6 +2,7 @@ package minioclient
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"mime/multipart"
 
@@ -41,5 +42,6 @@ func UploadFile(c *minio.Client, fh *multipart.FileHeader) (string, error) {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	fmt.Println(uploadInfo)
 	return uploadInfo.Location, err
 }

@@ -124,19 +124,19 @@ func (es *EventStore) Update(c echo.Context) error {
 	return c.JSON(http.StatusOK, event)
 }
 
-// func (es *EventStore) UpdateImage(c echo.Context) error {
-// 	uuid, err := uuid.Parse(c.Param("id"))
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return c.String(http.StatusBadRequest, "Bad Request - Invalid UUID")
-// 	}
-// 	file_header, err := c.FormFile("image")
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return c.String(http.StatusBadRequest, "Bad Request - No image")
-// 	}
+func (es *EventStore) UpdateImage(c echo.Context) error {
+	uuid, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		fmt.Println(err)
+		return c.String(http.StatusBadRequest, "Bad Request - Invalid UUID")
+	}
+	file_header, err := c.FormFile("image")
+	if err != nil {
+		fmt.Println(err)
+		return c.String(http.StatusBadRequest, "Bad Request - No image")
+	}
 
-// }
+}
 
 // func StoreImage(c echo.Context) string, error {
 // 	image, err := c.FormFile("image")

@@ -1,7 +1,9 @@
 package minioclient
 
 import (
+	"context"
 	"log"
+	"mime/multipart"
 
 	config "github.com/alexnorgaard/eventsapp"
 	"github.com/minio/minio-go/v7"
@@ -26,4 +28,18 @@ func GetClient() (*minio.Client, error) {
 
 	log.Printf("%#v\n", minioClient) // minioClient is now set up
 	return minioClient, err
+}
+
+func UploadFile(c *minio.Client, fileHeader *multipart.FileHeader) (string, error) {
+	config := config.GetConf()
+	contentType := "application/octet-stream"
+	file, err := fileHeader.Open()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	uploadInfo, err := c.PutObject(context.Background(), config.S3.Bucket_name_banners, fileHeader.Filename, file, fileHeader.Size, minio.PutObjectOptions{ContentType: contentType})
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return uploadInfo.Location, err
 }

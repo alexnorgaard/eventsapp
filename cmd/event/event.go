@@ -9,5 +9,5 @@ type Store interface {
 	Get(echo.Context) error
 	Create(echo.Context) error
 	Update(echo.Context) error
-	UpdateImage(echo.Context) error
+	UploadImage(echo.Context) error
 }

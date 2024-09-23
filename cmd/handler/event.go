@@ -124,7 +124,7 @@ func (es *EventStore) Update(c echo.Context) error {
 	return c.JSON(http.StatusOK, event)
 }
 
-func (es *EventStore) UpdateImage(c echo.Context) error {
+func (es *EventStore) UploadImage(c echo.Context) error {
 	uuid, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		fmt.Println(err)

@@ -31,12 +31,15 @@ func RegisterRoutes(e *echo.Echo, h *handler.Handler) {
 		return h.EventStore.GetByID(c)
 	})
 	event.PUT("/:id", func(c echo.Context) error {
-		fileHeader, _ := c.FormFile("image")
-		if fileHeader != nil {
-			return h.EventStore.UpdateImage(c)
-		}
 		return h.EventStore.Update(c)
 	})
+	event.POST("/:id/image", func(c echo.Context) error {
+		return h.EventStore.UploadImage(c)
+	})
+	// fileHeader, _ := c.FormFile("image")
+	// if fileHeader != nil {
+	// 	return h.EventStore.UploadImage(c)
+	// }
 
 	event.DELETE("/:id", func(c echo.Context) error {
 		id := c.Param("id")

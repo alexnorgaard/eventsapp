@@ -18,6 +18,11 @@ type config struct {
 	Google_geocoding_api struct {
 		Api_key string
 	}
+	S3 struct {
+		Access_key          string
+		Secret_key          string
+		Bucket_name_banners string
+	}
 }
 
 // Read the config file from the current directory and marshal

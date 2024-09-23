@@ -7,6 +7,7 @@ import (
 
 	"github.com/alexnorgaard/eventsapp/cmd/model"
 	geolocationclient "github.com/alexnorgaard/eventsapp/internal/geolocation_client"
+	minioClient "github.com/alexnorgaard/eventsapp/internal/minio_client"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
@@ -135,7 +136,31 @@ func (es *EventStore) UpdateImage(c echo.Context) error {
 		fmt.Println(err)
 		return c.String(http.StatusBadRequest, "Bad Request - No image")
 	}
+	client, err := minioClient.GetClient()
+	if err != nil {
+		fmt.Println(err)
+		return c.String(http.StatusInternalServerError, "Internal Server Error")
+	}
+	location, err := minioClient.UploadFile(client, file_header)
+	if err != nil {
+		fmt.Println(err)
+		return c.String(http.StatusInternalServerError, "Could not upload image")
+	}
 
+	event := model.Event{Model: model.Model{ID: uuid}}
+	c.Set("Banner_s3_url", location)
+	err = c.Bind(&event)
+	if err != nil {
+		fmt.Println(err)
+		return c.String(http.StatusBadRequest, "Bad Request")
+	}
+
+	result := es.db.Model(&event).Updates(&event)
+	if result.Error != nil {
+		return c.String(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	return c.JSON(http.StatusOK, event)
 }
 
 // func StoreImage(c echo.Context) string, error {

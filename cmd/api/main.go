@@ -27,7 +27,7 @@ func main() {
 	autoTLSManager := autocert.Manager{
 		Prompt: autocert.AcceptTOS,
 		// Cache certificates to avoid issues with rate limits (https://letsencrypt.org/docs/rate-limits)
-		Cache:      autocert.DirCache("/var/www/.cache"),
+		Cache:      autocert.DirCache("/usr/local/nginx/conf"),
 		HostPolicy: autocert.HostWhitelist("app.alexnorgaard.dk"),
 	}
 

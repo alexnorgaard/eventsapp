@@ -17,7 +17,7 @@ services:
         - "443:443"
         - "80:80"
     volumes:
-        - ./nginx.conf:/etc/nginx/nginx.conf
+        - ./compose/nginx/nginx.conf:/etc/nginx/nginx.conf
         - /root/.ssh/nginx/:/usr/local/nginx/conf/
     depends_on:
         - go

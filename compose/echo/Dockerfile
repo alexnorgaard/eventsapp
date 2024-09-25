@@ -6,8 +6,7 @@ WORKDIR /api
 COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 
-COPY ../.. .
-RUN go build -v -o /api/cmd/api ./...
-RUN chmod +x /api/cmd/api/main.go
+COPY . ./
+RUN CGO_ENABLED=0 GOOS=linux go build -o /echo-docker
 
-CMD ["/api/cmd/api/main.go"]
+CMD ["/echo-docker"]

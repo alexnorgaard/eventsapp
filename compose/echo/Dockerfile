@@ -8,5 +8,6 @@ RUN go mod download && go mod verify
 
 COPY ../.. .
 RUN go build -v -o /api/cmd/api ./...
+RUN chmod +x /api/cmd/api/main.go
 
 CMD ["/api/cmd/api/main.go"]

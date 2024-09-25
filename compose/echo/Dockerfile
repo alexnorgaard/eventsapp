@@ -9,4 +9,4 @@ RUN go mod download && go mod verify
 COPY ../.. .
 RUN go build -v -o /api/cmd/api ./...
 
-CMD ["api"]
+CMD ["/api/cmd/api"]

@@ -10,4 +10,7 @@ COPY . .
 RUN go build -o /echo-docker ./cmd/api/main.go
 RUN chmod 755 /echo-docker
 
+EXPOSE 8080
+EXPOSE 5432
+
 CMD ["/echo-docker"]

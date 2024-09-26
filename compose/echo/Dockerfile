@@ -7,7 +7,7 @@ COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 
 COPY . .
-RUN go build -o /echo-docker
+RUN go build -o /echo-docker ./cmd/api/main.go
 RUN chmod 755 /echo-docker
 
 CMD ["/echo-docker"]

@@ -37,7 +37,7 @@ services:
         MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
         MINIO_ADDRESS: ":9000"
         MINIO_CONSOLE_ADDRESS: ":9001"
-        MINIO_BROWSER_REDIRECT_URL: "https://app.alexnorgaard.dk/minio/ui/"
+        MINIO_BROWSER_REDIRECT_URL: "https://app.alexnorgaard.dk/minio/ui/" # Redirect to the UI does not work without this
     command: server /data
 
   minio-mc:

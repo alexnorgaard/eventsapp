@@ -10,7 +10,7 @@ services:
         - .:/api
         - /root/.ssh/nginx/:/usr/local/nginx/conf/
     extra_hosts:
-    - "host.docker.internal:host-gateway" #DNS resolves to internal ip used by host
+    - "host.docker.internal:${HOST_IP}" #DNS resolves to internal ip used by host
 
   nginx:
     image: nginx:latest

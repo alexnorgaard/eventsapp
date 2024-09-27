@@ -5,12 +5,11 @@ services:
         dockerfile: ./compose/echo/Dockerfile
     ports:
         - "8080:8080"
-        - "5432:5432"
     volumes:
         - .:/api
         - /root/.ssh/nginx/:/usr/local/nginx/conf/
     extra_hosts:
-    - "host.docker.internal:${HOST_IP}" #DNS resolves to internal ip used by host
+    - "host.docker.internal:host-gateway" #DNS resolves to internal ip used by host
 
   nginx:
     image: nginx:latest

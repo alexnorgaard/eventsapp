@@ -13,7 +13,7 @@ import (
 
 func GetClient() (*minio.Client, error) {
 	config := config.GetConf()
-	endpoint := "localhost:9000"
+	endpoint := "host.docker.internal:9000"
 	accessKeyID := config.S3.Access_key
 	secretAccessKey := config.S3.Secret_key
 	useSSL := false

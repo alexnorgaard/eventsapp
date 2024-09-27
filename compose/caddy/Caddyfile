@@ -3,7 +3,16 @@
 }
 
 app.alexnorgaard.dk {
-    reverse_proxy /api/* localhost:8080
-    reverse_proxy /files/* localhost:9000
-    reverse_proxy /minio/ui/* localhost:9001
+    handle_path /api/* {
+        uri strip_prefix /api
+        reverse_proxy localhost:8080
+    }
+    handle_path /files/* {
+        uri strip_prefix /files
+        reverse_proxy localhost:9000
+    }
+    handle_path /minio/ui/* {
+        uri strip_prefix /minio/ui
+        reverse_proxy localhost:9001
+    }
 }

@@ -11,25 +11,25 @@ services:
     extra_hosts:
     - "host.docker.internal:host-gateway" #DNS resolves to internal ip used by host
 
-  nginx:
-    image: nginx:latest
-    volumes:
-      - ./compose/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - /root/.ssh/nginx/:/usr/local/nginx/conf/
-    network_mode: "host"
-    depends_on:
-      - go
-
-  # caddy:
-  #   image: caddy:latest
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
+  # nginx:
+  #   image: nginx:latest
   #   volumes:
-  #     - ./compose/caddy/Caddyfile:/etc/caddy/Caddyfile
+  #     - ./compose/nginx/nginx.conf:/etc/nginx/nginx.conf
+  #     - /root/.ssh/nginx/:/usr/local/nginx/conf/
   #   network_mode: "host"
   #   depends_on:
   #     - go
+
+  caddy:
+    image: caddy:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./compose/caddy/Caddyfile:/etc/caddy/Caddyfile
+    network_mode: "host"
+    depends_on:
+      - go
   
   minio:
     image: minio/minio

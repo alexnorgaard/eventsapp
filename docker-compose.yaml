@@ -36,13 +36,3 @@ services:
         MINIO_CONSOLE_ADDRESS: ":9001"
         MINIO_BROWSER_REDIRECT_URL: "https://app.alexnorgaard.dk/minio/ui/" # Redirect to the UI does not work without this
     command: server /data
-
-  minio-mc:
-    image: minio/mc
-    depends_on:
-      - minio
-    entrypoint: >
-      /bin/sh -c "
-      /usr/bin/mc anonymous set download event-banner-images;
-      exit 0;
-      "

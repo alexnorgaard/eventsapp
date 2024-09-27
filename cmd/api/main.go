@@ -32,7 +32,7 @@ func main() {
 	}
 
 	s := http.Server{
-		Addr:    ":https, :8080",
+		Addr:    ":https",
 		Handler: e, // set Echo as handler
 		TLSConfig: &tls.Config{
 			//Certificates: nil, // <-- s.ListenAndServeTLS will populate this field

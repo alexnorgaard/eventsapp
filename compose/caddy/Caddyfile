@@ -1,0 +1,9 @@
+{
+    email alex.norgaard@gmail.com
+}
+
+app.alexnorgaard.dk {
+    reverse_proxy /api/* localhost:8080
+    reverse_proxy /files/* localhost:9000
+    reverse_proxy /minio/ui/* localhost:9001
+}

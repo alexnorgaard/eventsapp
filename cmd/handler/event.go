@@ -43,21 +43,28 @@ func (es *EventStore) GetByID(c echo.Context) error {
 }
 
 func (es *EventStore) Get(c echo.Context) error {
-	params := c.QueryParams()
-	tags := params.Get("tags") //Should probably not be called tags anymore, as its now also a string search
-	title := strings.ReplaceAll(tags, ",", " ")
-	lat := params.Get("lat")
-	long := params.Get("long")
-	coordinates := []string{long, lat}
 	//Smart select fields - only returns the fields in APIEvent when used in Find
 	var events = []APIEvent{}
-	//ILIKE makes the LIKE case insensitive
-	result := es.db.Model(&model.Event{}).Where("tags @> ? OR title ILIKE ?", "{"+tags+"}", "%"+title+"%").Select("id, title, lng, lat, ST_DistanceSphere(ST_MakePoint(lng,lat),ST_MakePoint(?))/1000 as distance", coordinates).Order("distance asc").Find(&events)
-	// result := es.db.Model(&model.Event{}).Find(&events, "tags @> ?", "{"+tags+"}")
-	// result := es.db.Raw({"SELECT events.id,events.title FROM "events" WHERE tags @> ?, '{'+party+'}'})
+	var result *gorm.DB
+
+	params := c.QueryParams()
+	if len(params) != 0 {
+		tags := params.Get("tags") //Should probably not be called tags anymore, as its now also a string search
+		title := strings.ReplaceAll(tags, ",", " ")
+		lat := params.Get("lat")
+		long := params.Get("long")
+		coordinates := []string{long, lat}
+		//ILIKE makes the LIKE case insensitive
+		result = es.db.Model(&model.Event{}).Where("tags @> ? OR title ILIKE ?", "{"+tags+"}", "%"+title+"%").Select("id, title, lng, lat, ST_DistanceSphere(ST_MakePoint(lng,lat),ST_MakePoint(?))/1000 as distance", coordinates).Order("distance asc").Find(&events)
+	} else {
+		result = es.db.Model(&model.Event{}).Select("id, title").Find(&events)
+	}
 	if result.Error != nil {
 		return c.String(http.StatusNotFound, "Not Found")
 	}
+	// result := es.db.Model(&model.Event{}).Find(&events, "tags @> ?", "{"+tags+"}")
+	// result := es.db.Raw({"SELECT events.id,events.title FROM "events" WHERE tags @> ?, '{'+party+'}'})
+
 	return c.JSON(http.StatusOK, events)
 }
 

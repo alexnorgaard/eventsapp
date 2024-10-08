@@ -10,6 +10,7 @@ services:
         - /root/.ssh/nginx/:/usr/local/nginx/conf/
     extra_hosts:
     - "host.docker.internal:host-gateway" #DNS resolves to internal ip used by host
+    restart: unless-stopped
 
   # nginx:
   #   image: nginx:latest
@@ -28,6 +29,7 @@ services:
     volumes:
       - ./compose/caddy/Caddyfile:/etc/caddy/Caddyfile
     network_mode: "host"
+    restart: always
     depends_on:
       - go
   
@@ -39,11 +41,10 @@ services:
     volumes:
       - /root/minio/data:/data
     environment:
-        MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-        MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
         MINIO_ROOT_USER: ${MINIO_ROOT_USER}
         MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
         MINIO_ADDRESS: ":9000"
         MINIO_CONSOLE_ADDRESS: ":9001"
         MINIO_BROWSER_REDIRECT_URL: "https://app.alexnorgaard.dk/minio/ui/" # Redirect to the UI does not work without this
+    restart: always
     command: server /data

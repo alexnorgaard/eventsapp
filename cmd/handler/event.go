@@ -56,7 +56,7 @@ func (es *EventStore) Get(c echo.Context) error {
 		long := params.Get("long")
 		coordinates := []string{long, lat}
 		//ILIKE makes the LIKE case insensitive
-		result = es.db.Model(&model.Event{}).Where("tags @> ? OR title ILIKE ?", "{"+tags+"}", "%"+title+"%").Select("id, title, lng, lat, ST_DistanceSphere(ST_MakePoint(lng,lat),ST_MakePoint(?))/1000 as distance", coordinates).Order("distance asc").Find(&events)
+		result = es.db.Model(&model.Event{}).Where("tags @> ? OR title ILIKE ?", "{"+tags+"}", "%"+title+"%").Select("id, title, address, lng, lat, ST_DistanceSphere(ST_MakePoint(lng,lat),ST_MakePoint(?))/1000 as distance", coordinates).Order("distance asc").Find(&events)
 	} else {
 		result = es.db.Model(&model.Event{}).Select("id, title").Find(&events)
 	}

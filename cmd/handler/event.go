@@ -18,10 +18,10 @@ type EventStore struct {
 }
 
 type APIEvent struct {
-	ID       uuid.UUID `json:"id"`
-	Title    string    `json:"title"`
-	Distance float64   `json:"distance"`
-	Address  string    `json:"address"`
+	ID               uuid.UUID `json:"id"`
+	Title            string    `json:"title"`
+	Distance         float64   `json:"distance"`
+	FormattedAddress string    `json:"address"`
 }
 
 func NewEventStore(db *gorm.DB) *EventStore {

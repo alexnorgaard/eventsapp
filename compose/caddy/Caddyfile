@@ -2,7 +2,7 @@
     email alex.norgaard@gmail.com
 }
 
-app.alexnorgaard.dk {
+api.alexnorgaard.dk {
     handle_path /api/* {
         uri strip_prefix /api
         reverse_proxy localhost:8080

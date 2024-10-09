@@ -49,3 +49,6 @@ services:
         MINIO_BROWSER_REDIRECT_URL: "https://app.alexnorgaard.dk/minio/ui/" # Redirect to the UI does not work without this
     restart: always
     command: server /data
+
+volumes:
+  caddy_data:

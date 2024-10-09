@@ -28,7 +28,7 @@ services:
       - "443:443"
     volumes:
       - ./compose/caddy/Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/caddy_data
+      - caddy_data:/data
     network_mode: "host"
     restart: always
     depends_on:

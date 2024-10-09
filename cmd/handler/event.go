@@ -17,10 +17,22 @@ type EventStore struct {
 	db *gorm.DB
 }
 
-type APIEvent struct {
+type EventSearchItemDTO struct {
 	ID               uuid.UUID `json:"id"`
 	Title            string    `json:"title"`
 	Distance         float64   `json:"distance"`
+	FormattedAddress string    `json:"address"`
+	Lat              float64   `json:"lat"`
+	Lng              float64   `json:"lng"`
+}
+
+type EventDTO struct {
+	ID               uuid.UUID `json:"id"`
+	Title            string    `json:"title"`
+	Description      string    `json:"description"`
+	Banner_url       string    `json:"banner_url"`
+	Time_start       string    `json:"time_start"`
+	Time_end         string    `json:"time_end"`
 	FormattedAddress string    `json:"address"`
 	Lat              float64   `json:"lat"`
 	Lng              float64   `json:"lng"`
@@ -32,13 +44,14 @@ func NewEventStore(db *gorm.DB) *EventStore {
 
 func (es *EventStore) GetByID(c echo.Context) error {
 	fmt.Println("UUID is: ", c.Param("id"))
+	var eventDTO = EventDTO{}
 	uuid, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		fmt.Println(err)
 		return c.String(http.StatusBadRequest, "Bad Request - Invalid UUID")
 	}
 	var event = model.Event{Model: model.Model{ID: uuid}}
-	result := es.db.First(&event)
+	result := es.db.First(&eventDTO)
 	if result.Error != nil {
 		return c.String(http.StatusNotFound, "Not Found")
 	}
@@ -47,7 +60,7 @@ func (es *EventStore) GetByID(c echo.Context) error {
 
 func (es *EventStore) Get(c echo.Context) error {
 	//Smart select fields - only returns the fields in APIEvent when used in Find
-	var events = []APIEvent{}
+	var events = []EventSearchItemDTO{}
 	var result *gorm.DB
 
 	params := c.QueryParams()

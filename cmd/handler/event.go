@@ -44,18 +44,19 @@ func NewEventStore(db *gorm.DB) *EventStore {
 
 func (es *EventStore) GetByID(c echo.Context) error {
 	fmt.Println("UUID is: ", c.Param("id"))
-	var eventDTO = EventDTO{}
 	uuid, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		fmt.Println(err)
 		return c.String(http.StatusBadRequest, "Bad Request - Invalid UUID")
 	}
-	var event = model.Event{Model: model.Model{ID: uuid}}
-	result := es.db.First(&eventDTO)
+	// var event = model.Event{Model: model.Model{ID: uuid}}
+	// result := es.db.First(&event)
+	var eventDTO = EventDTO{ID: uuid}
+	result := es.db.Model(&model.Event{}).First(&eventDTO)
 	if result.Error != nil {
 		return c.String(http.StatusNotFound, "Not Found")
 	}
-	return c.JSON(http.StatusOK, event)
+	return c.JSON(http.StatusOK, eventDTO)
 }
 
 func (es *EventStore) Get(c echo.Context) error {

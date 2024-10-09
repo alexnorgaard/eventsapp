@@ -22,6 +22,8 @@ type APIEvent struct {
 	Title            string    `json:"title"`
 	Distance         float64   `json:"distance"`
 	FormattedAddress string    `json:"address"`
+	Lat              float64   `json:"lat"`
+	Lng              float64   `json:"lng"`
 }
 
 func NewEventStore(db *gorm.DB) *EventStore {

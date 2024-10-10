@@ -2,12 +2,10 @@
     email alex.norgaard@gmail.com
 }
 
-log {
-    hostnames api.alexnorgaard.dk
-    output stdout
-}
-
 api.alexnorgaard.dk {
+    log {
+        output stdout
+    }
     handle_path /api/* {
         uri strip_prefix /api
         reverse_proxy localhost:8080

@@ -2,6 +2,11 @@
     email alex.norgaard@gmail.com
 }
 
+log {
+    hostnames api.alexnorgaard.dk
+    output stdout
+}
+
 api.alexnorgaard.dk {
     handle_path /api/* {
         uri strip_prefix /api

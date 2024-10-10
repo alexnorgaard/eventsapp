@@ -51,8 +51,8 @@ func (es *EventStore) GetByID(c echo.Context) error {
 	}
 	// var event = model.Event{Model: model.Model{ID: uuid}}
 	// result := es.db.First(&event)
-	var eventDTO = EventDTO{ID: uuid}
-	result := es.db.Model(&model.Event{}).First(&eventDTO)
+	var eventDTO = EventDTO{}
+	result := es.db.Model(&model.Event{}).Where("id = ?", uuid).First(&eventDTO)
 	if result.Error != nil {
 		return c.String(http.StatusNotFound, "Not Found")
 	}
